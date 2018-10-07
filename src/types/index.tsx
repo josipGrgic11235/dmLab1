@@ -1,3 +1,11 @@
+declare global {
+    // tslint:disable-next-line:interface-name
+    interface Window {
+        FB: any
+        fbAsyncInit(): void;
+    }
+}
+
 export interface IFacebookLoginCheck {
     authResponse: IFacebookLoginInfo;
     status: IFacebookLoginStatus;

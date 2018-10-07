@@ -1,9 +1,9 @@
 import { AppAction } from '../actions/appActions';
 import * as constants from '../constants/app';
-import { IFacebookLoginInfo } from '../types';
+import { IFacebookLoginCheck } from '../types';
 
 export interface IAppState {
-    loginInfo: IFacebookLoginInfo;
+    loginInfo: IFacebookLoginCheck;
 }
 
 export const initialState: IAppState = {
