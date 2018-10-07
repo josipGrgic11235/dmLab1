@@ -32,6 +32,7 @@ class App extends React.Component<IAppProps, any> {
 		super(props);
 
 		this._onLogin = this._onLogin.bind(this);
+		this._onLogout = this._onLogout.bind(this);
 		this.initializeSDK = this.initializeSDK.bind(this);
 		this.loadSDK = this.loadSDK.bind(this);
 		this.checkLoginState = this.checkLoginState.bind(this);
@@ -88,7 +89,7 @@ class App extends React.Component<IAppProps, any> {
 	}
 
 	private _onLogout() {
-		window.FB.logout();
+		window.FB.logout(this.checkLoginState);
 	}
 
 	private checkLoginState() {
