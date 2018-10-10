@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Owin;
 using System.Web.Http;
 using System.Net.Http;
-using MongoDB.Bson;
-using MongoDB.Driver;
+
 
 namespace DMLab1.Backend
 {
