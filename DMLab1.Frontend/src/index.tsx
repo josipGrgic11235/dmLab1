@@ -7,12 +7,13 @@ import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import { AppReducer, IAppState, initialState } from './reducers/appReducer';
 
 const store = createStore<IAppState, any, any, any>(
   AppReducer,
   initialState,
-  composeWithDevTools(applyMiddleware())
+  composeWithDevTools(applyMiddleware(thunk))
 );
 
 ReactDOM.render(

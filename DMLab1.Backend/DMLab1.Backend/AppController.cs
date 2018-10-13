@@ -11,10 +11,40 @@ namespace DMLab1.Backend
     public class AppController: ApiController 
     {
         [Route("api/app/get")]
-        [HttpGet]
-        public void Get()
+        [HttpPost]
+        public object Get([FromBody] Response o)
         {
             Console.WriteLine("GET");
+            return new
+            {
+                Message = "Hello there",
+                Data = new
+                {
+                    AccessToken = "Token",
+                    Number = 5
+                }
+            };
         }
+
+        [Route("api/app/get")]
+        [HttpGet]
+        public object Get()
+        {
+            Console.WriteLine("GET");
+            return new
+            {
+                Message = "Hello there",
+                Data = new
+                {
+                    AccessToken = "Token",
+                    Number = 5
+                }
+            };
+        }
+    }
+
+    public class Response
+    {
+        public int Obj { get; set; }
     }
 }

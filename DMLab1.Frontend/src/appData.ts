@@ -1,0 +1,1 @@
+export const serviceEndpoint: string = 'http://localhost:3008';

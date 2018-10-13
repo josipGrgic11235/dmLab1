@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Owin;
+﻿using Owin;
 using System.Web.Http;
-using System.Net.Http;
-
+using System.Web.Http.Cors;
 
 namespace DMLab1.Backend
 {
@@ -15,12 +9,8 @@ namespace DMLab1.Backend
         public void Configuration(IAppBuilder appBuilder)
         {
             HttpConfiguration config = new HttpConfiguration();
-            config.EnableCors();
-            /*config.Routes.MapHttpRoute(
-                name: "createUserApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-                );*/
+            var cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(cors);
             config.MapHttpAttributeRoutes();
             appBuilder.UseWebApi(config);
 

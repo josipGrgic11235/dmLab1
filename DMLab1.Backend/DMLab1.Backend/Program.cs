@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Owin.Hosting;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -15,12 +11,12 @@ namespace DMLab1.Backend
         static void Main(string[] args)
         {
 
-            var client = new MongoClient("mongodb://localhost:27017");
+            /*var client = new MongoClient("mongodb://localhost:27017");
             var db = client.GetDatabase("dmLab1");
             var collection = db.GetCollection<MongoObject>("data");
             collection.DeleteMany(FilterDefinition<MongoObject>.Empty);
             collection.InsertOne(new MongoObject(42, "The Universe"));
-            var obj = collection.Find(FilterDefinition<MongoObject>.Empty).Single();
+            var obj = collection.Find(FilterDefinition<MongoObject>.Empty).Single();*/
 
             string domainAddress = "http://localhost:3008/";
 
