@@ -20,6 +20,8 @@ namespace DMLab1.Backend
 
             string domainAddress = "http://localhost:3008/";
 
+            AppManager.GetData();
+
             using (WebApp.Start(url: domainAddress))
             {
                 Console.WriteLine("Service Hosted " + domainAddress);

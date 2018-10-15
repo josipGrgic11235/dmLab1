@@ -10,25 +10,9 @@ namespace DMLab1.Backend
 {
     public class AppController: ApiController 
     {
-        [Route("api/app/get")]
+        [Route("api/app/login")]
         [HttpPost]
-        public object Get([FromBody] Response o)
-        {
-            Console.WriteLine("GET");
-            return new
-            {
-                Message = "Hello there",
-                Data = new
-                {
-                    AccessToken = "Token",
-                    Number = 5
-                }
-            };
-        }
-
-        [Route("api/app/get")]
-        [HttpGet]
-        public object Get()
+        public object Login([FromBody] Login logindata)
         {
             Console.WriteLine("GET");
             return new
@@ -43,8 +27,11 @@ namespace DMLab1.Backend
         }
     }
 
-    public class Response
+    public class Login
     {
-        public int Obj { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string AccessToken { get; set; }
+        public string Id { get; set; }
     }
 }

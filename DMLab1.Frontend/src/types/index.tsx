@@ -14,12 +14,8 @@ export interface IFacebookLoginCheck {
 export interface IFacebookLoginInfo {
     accessToken: string;
     email: string;
-    expiresIn: number;
-    id: string;
     name: string;
-    reauthorize_required_in: number;
-    signedRequest: string;
-    userID: string;
+    id: string;
 }
 
 export enum IFacebookLoginStatus {

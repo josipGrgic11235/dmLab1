@@ -33,6 +33,7 @@ class App extends React.Component<IAppProps, any> {
 
 		this._onLogin = this._onLogin.bind(this);
 		this._onLogout = this._onLogout.bind(this);
+		this._onLoggedIn = this._onLoggedIn.bind(this);
 		this.initializeSDK = this.initializeSDK.bind(this);
 		this.loadSDK = this.loadSDK.bind(this);
 		this.checkLoginState = this.checkLoginState.bind(this);
@@ -70,7 +71,7 @@ class App extends React.Component<IAppProps, any> {
 			version: 'v2.1' // use version 2.1
 		});
 
-		window.FB.getLoginStatus(this.props.onLogin)
+		window.FB.getLoginStatus(this._onLoggedIn)
 	}
 
 	private loadSDK(document: Document, script: string, id: string) {
@@ -84,8 +85,25 @@ class App extends React.Component<IAppProps, any> {
 		fjs.parentNode.insertBefore(js, fjs);
 	}
 
+	private _onLoggedIn(response: any) {
+		console.log(response);
+		if (response.status === 'connected') {
+			window.FB.api('/me?fields=id,name,birthday,location,email', (dataResponse: any) => {
+				this.props.onLogin({
+					status: response.status,
+					authResponse: {
+						accessToken: response.authResponse.accessToken,
+						email: dataResponse.email,
+						name: dataResponse.name,
+						id: dataResponse.id
+					}
+				})
+			});
+		}
+	}
+
 	private _onLogin() {
-		window.FB.login(this.checkLoginState);
+		window.FB.login(this.checkLoginState, { scope: 'public_profile,email' });
 	}
 
 	private _onLogout() {
@@ -93,7 +111,7 @@ class App extends React.Component<IAppProps, any> {
 	}
 
 	private checkLoginState() {
-		window.FB.getLoginStatus(this.props.onLogin);
+		window.FB.getLoginStatus(this._onLoggedIn);
 	}
 }
 

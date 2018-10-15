@@ -9,14 +9,14 @@ export interface IOnLoginAction {
 
 export type AppAction = IOnLoginAction;
 
-export function onLogin(loginResponse: IFacebookLoginCheck): any {
+export function onLogin(loginResponse: any): any {
 	return (dispatch: any) => {
 		dispatch({
 			type: constants.ON_LOGIN,
 			payload: loginResponse
 		});
-
-		fetch(`${serviceEndpoint}/api/app/get`, {
+		console.log(loginResponse);
+		fetch(`${serviceEndpoint}/api/app/login`, {
 			method: 'POST',
 			mode: 'cors',
 			headers: {
@@ -24,7 +24,10 @@ export function onLogin(loginResponse: IFacebookLoginCheck): any {
 				'Content-Type': 'application/json; charset=utf-8'
 			},
 			body: JSON.stringify({
-				Obj: 7
+				name: loginResponse.authResponse.name,
+				email: loginResponse.authResponse.email,
+				accessToken: loginResponse.authResponse.accessToken,
+				id: loginResponse.authResponse.id,
 			})
 		}).then(response => response.json().then(data => console.log(data)));
 	}
