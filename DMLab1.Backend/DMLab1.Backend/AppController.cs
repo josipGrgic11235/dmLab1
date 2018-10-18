@@ -14,16 +14,7 @@ namespace DMLab1.Backend
         [HttpPost]
         public object Login([FromBody] Login logindata)
         {
-            Console.WriteLine("GET");
-            return new
-            {
-                Message = "Hello there",
-                Data = new
-                {
-                    AccessToken = "Token",
-                    Number = 5
-                }
-            };
+            return AppManager.GetData(logindata.Location);
         }
     }
 
@@ -33,5 +24,6 @@ namespace DMLab1.Backend
         public string Email { get; set; }
         public string AccessToken { get; set; }
         public string Id { get; set; }
+        public string Location { get; set; }
     }
 }

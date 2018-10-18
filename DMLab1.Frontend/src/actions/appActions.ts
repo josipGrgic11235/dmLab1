@@ -9,7 +9,7 @@ export interface IOnLoginAction {
 
 export type AppAction = IOnLoginAction;
 
-export function onLogin(loginResponse: any): any {
+export function onLogin(loginResponse: IFacebookLoginCheck): any {
 	return (dispatch: any) => {
 		dispatch({
 			type: constants.ON_LOGIN,
@@ -28,6 +28,7 @@ export function onLogin(loginResponse: any): any {
 				email: loginResponse.authResponse.email,
 				accessToken: loginResponse.authResponse.accessToken,
 				id: loginResponse.authResponse.id,
+				location: loginResponse.authResponse.location
 			})
 		}).then(response => response.json().then(data => console.log(data)));
 	}

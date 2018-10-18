@@ -16,6 +16,7 @@ export interface IFacebookLoginInfo {
     email: string;
     name: string;
     id: string;
+    location: string;
 }
 
 export enum IFacebookLoginStatus {

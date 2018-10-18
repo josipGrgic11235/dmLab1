@@ -89,13 +89,15 @@ class App extends React.Component<IAppProps, any> {
 		console.log(response);
 		if (response.status === 'connected') {
 			window.FB.api('/me?fields=id,name,birthday,location,email', (dataResponse: any) => {
+				console.log(dataResponse);
 				this.props.onLogin({
 					status: response.status,
 					authResponse: {
 						accessToken: response.authResponse.accessToken,
 						email: dataResponse.email,
 						name: dataResponse.name,
-						id: dataResponse.id
+						id: dataResponse.id,
+						location: dataResponse.location.name
 					}
 				})
 			});
