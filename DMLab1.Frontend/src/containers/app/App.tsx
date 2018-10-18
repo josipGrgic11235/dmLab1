@@ -3,26 +3,31 @@ import './App.css';
 
 // import ReactFacebookLogin from 'react-facebook-login';
 import { connect } from 'react-redux';
+import { VenueInfo } from 'src/components/venueInfo/VenueInfo';
 import * as appActions from '../../actions/appActions';
 import logo from '../../logo.svg';
 import { IAppState } from '../../reducers/appReducer';
-import { IFacebookLoginCheck, IFacebookLoginStatus } from '../../types';
+import { IFacebookLoginCheck, IFacebookLoginStatus, IVenueInfo } from '../../types';
 
 export interface IAppProps {
 	loginInfo: IFacebookLoginCheck;
+	venueData: IVenueInfo[];
 
 	onLogin?(response: IFacebookLoginCheck): void;
+	getVenueData?(venueId: string): void;
 }
 
 function mapStateToProps(state: IAppState): Partial<IAppProps> {
 	return {
-		loginInfo: state.loginInfo
+		loginInfo: state.loginInfo,
+		venueData: state.venueInfo
 	};
 }
 
 function mapDispatchToProps(dispatch: any): Partial<IAppProps> {
 	return {
-		onLogin: (response: IFacebookLoginCheck) => dispatch(appActions.onLogin(response))
+		onLogin: (response: IFacebookLoginCheck) => dispatch(appActions.onLogin(response)),
+		getVenueData: (venueId: string) => dispatch(appActions.getVenueInfo(venueId))
 	};
 }
 
@@ -59,6 +64,15 @@ class App extends React.Component<IAppProps, any> {
         		</p>
 				{!isLoggedIn && <button onClick={this._onLogin}>Login</button>}
 				{isLoggedIn && <button onClick={this._onLogout}>Logout</button>}
+
+				{this.props.venueData.map((item, index) =>
+					<VenueInfo
+						data={item}
+						key={index}
+						onClicked={this.props.getVenueData}
+						isLoadingData={false}
+					/>
+				)}
 			</div>
 		);
 	}

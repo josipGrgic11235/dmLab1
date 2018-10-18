@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
 using Newtonsoft.Json;
 
 namespace DMLab1.Backend
@@ -28,21 +24,49 @@ namespace DMLab1.Backend
 
         public static object GetData(string location)
         {
+            var request = WebRequest.CreateHttp(GetFourSquareRequestUrl("venues/explore", $"near={location}"));
+            var content = GetRequestResponseContent(request);
+
+            if (content == null)
+            {
+                return null;
+            }
+
             try
             {
-                var request = WebRequest.CreateHttp(GetFourSquareRequestUrl("venues/explore", $"near={location}"));
-                var content = GetRequestResponseContent(request);
-
-                if (content == null)
-                {
-                    return null;
-                }
-
-                var data = JsonConvert.DeserializeObject<FoursquareReponse>(content);
+                var data = JsonConvert.DeserializeObject<FoursquareVenueRecommendeationReponse>(content);
                 var venues = data.Response.Groups.First().Items.Select(item => item.Venue).ToList();
                 return venues;
             }
 
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
+        public static object GetVenueInformation(string venueId)
+        {
+            var request = WebRequest.CreateHttp(GetFourSquareRequestUrl($"venues/{venueId}"));
+            var content = GetRequestResponseContent(request);
+
+            if (content == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                var data = JsonConvert.DeserializeObject<FoursquareVenueDetailsResponse>(content);
+                return new VenueInfo
+                {
+                    Id = data.Response.Venue.Id,
+                    LikeCount = data.Response.Venue.Likes.Count,
+                    PhotoUrls = data.Response.Venue.Photos.Groups.SelectMany(g => g.Items.Select(i => i.Url)).ToList(),
+                    Tips = data.Response.Venue.Tips.Groups.SelectMany(g => g.Items.Select(t => new Tip(t))).ToList()
+                };
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e);
@@ -71,7 +95,7 @@ namespace DMLab1.Backend
             }
         }
 
-        private static string GetFourSquareRequestUrl(string path, string query)
+        private static string GetFourSquareRequestUrl(string path, string query = "")
         {
             var baseUrl = "https://api.foursquare.com/v2/";
             return $"{baseUrl}{path}?{query}&client_id={FOURSQUARE_CLIENT_ID}&client_secret={FOURSQUARE_CLIENT_SECRET}&v=20181015";

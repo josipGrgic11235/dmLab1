@@ -16,6 +16,13 @@ namespace DMLab1.Backend
         {
             return AppManager.GetData(logindata.Location);
         }
+
+        [Route("api/app/venue/{venueId}")]
+        [HttpGet]
+        public object GetVenueInformation([FromUri] string venueId)
+        {
+            return AppManager.GetVenueInformation(venueId);
+        }
     }
 
     public class Login

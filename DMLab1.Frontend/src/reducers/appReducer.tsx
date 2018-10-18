@@ -1,13 +1,15 @@
 import { AppAction } from '../actions/appActions';
 import * as constants from '../constants/app';
-import { IFacebookLoginCheck } from '../types';
+import { IFacebookLoginCheck, IVenueInfo } from '../types';
 
 export interface IAppState {
     loginInfo: IFacebookLoginCheck;
+    venueInfo: IVenueInfo[];
 }
 
 export const initialState: IAppState = {
-    loginInfo: null
+    loginInfo: null,
+    venueInfo: []
 }
 
 export function AppReducer(state: IAppState, action: AppAction): IAppState {
@@ -17,6 +19,15 @@ export function AppReducer(state: IAppState, action: AppAction): IAppState {
                 ...state,
                 loginInfo: action.payload
             }
+        case constants.ON_GET_DATA_RESPONSE:
+            return {
+                ...state,
+                venueInfo: action.payload
+            }
+        case constants.ON_GET_VENUE_DATA_RESPONSE:
+            return {
+                ...state
+            };
     }
 
     return state;
