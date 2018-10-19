@@ -16,7 +16,19 @@ export interface IFacebookLoginInfo {
     email: string;
     name: string;
     id: string;
-    location: string;
+    location: ILoginLocationInfo;
+}
+
+export interface ILoginLocationInfo {
+    id: string;
+    location: ILoginInnerLocationInfo;
+}
+
+export interface ILoginInnerLocationInfo {
+    city: string;
+    country: string;
+    latitude: number;
+    longitude: number;
 }
 
 export enum IFacebookLoginStatus {
@@ -28,12 +40,10 @@ export interface IVenueInfo {
     id: string;
     name: string;
     location: ILocationInfo;
-    isSelected: boolean;
     infoLoading: boolean;
-    photos: string[];
+    photoUrls: string[];
     tips: IVenueTip[];
-    likes: number;
-
+    likeCount: number;
 }
 
 export interface IVenueTip {
@@ -54,4 +64,15 @@ export interface IUser {
     id: string;
     name: string;
     photoUrl: string;
+}
+
+export interface IGetDataResponse {
+    venues: IVenueInfo[];
+    weather: IWeatherInfo;
+}
+
+export interface IWeatherInfo {
+    description: string;
+    pressure: number;
+    temperature: number;
 }

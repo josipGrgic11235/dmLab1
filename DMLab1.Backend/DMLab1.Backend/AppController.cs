@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Cors;
+﻿using System.Web.Http;
 
 namespace DMLab1.Backend
 {
@@ -12,25 +6,30 @@ namespace DMLab1.Backend
     {
         [Route("api/app/login")]
         [HttpPost]
-        public object Login([FromBody] Login logindata)
+        public ResponseData Login([FromBody] Login logindata)
         {
-            return AppManager.GetData(logindata.Location);
+            var data = AppManager.GetData(logindata.Location);
+
+            if (data != null)
+            {
+                MongoDatabase.StoreResponseData(data, logindata);
+            }
+
+            return data;
         }
 
         [Route("api/app/venue/{venueId}")]
         [HttpGet]
-        public object GetVenueInformation([FromUri] string venueId)
+        public VenueInfo GetVenueInformation([FromUri] string venueId)
         {
-            return AppManager.GetVenueInformation(venueId);
-        }
-    }
+            var venueInfo = AppManager.GetVenueInformation(venueId);
 
-    public class Login
-    {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string AccessToken { get; set; }
-        public string Id { get; set; }
-        public string Location { get; set; }
+            if (venueInfo != null)
+            {
+                MongoDatabase.StoreVenueInfo(venueInfo);
+            }
+
+            return venueInfo;
+        }
     }
 }

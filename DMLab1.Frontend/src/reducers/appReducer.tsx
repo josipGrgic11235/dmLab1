@@ -1,15 +1,17 @@
 import { AppAction } from '../actions/appActions';
 import * as constants from '../constants/app';
-import { IFacebookLoginCheck, IVenueInfo } from '../types';
+import { IFacebookLoginCheck, IVenueInfo, IWeatherInfo } from '../types';
 
 export interface IAppState {
     loginInfo: IFacebookLoginCheck;
-    venueInfo: IVenueInfo[];
+    venueInfo: { [id: string]: IVenueInfo };
+    weather: IWeatherInfo;
 }
 
 export const initialState: IAppState = {
     loginInfo: null,
-    venueInfo: []
+    venueInfo: {},
+    weather: null
 }
 
 export function AppReducer(state: IAppState, action: AppAction): IAppState {
@@ -19,14 +21,33 @@ export function AppReducer(state: IAppState, action: AppAction): IAppState {
                 ...state,
                 loginInfo: action.payload
             }
-        case constants.ON_GET_DATA_RESPONSE:
+        case constants.GET_DATA_RESPONSE:
+            const data: { [id: string]: IVenueInfo } = {};
+            action.payload.venues.forEach((item: IVenueInfo) => data[item.id] = {
+                ...item,
+                infoLoading: true,
+            });
+
             return {
                 ...state,
-                venueInfo: action.payload
+                venueInfo: data,
+                weather: action.payload.weather
             }
-        case constants.ON_GET_VENUE_DATA_RESPONSE:
+        case constants.GET_VENUE_DATA_REQUEST:
             return {
                 ...state
+            }
+        case constants.GET_VENUE_DATA_RESPONSE:
+            return {
+                ...state,
+                venueInfo: {
+                    ...state.venueInfo,
+                    [action.payload.id]: {
+                        ...state.venueInfo[action.payload.id],
+                        ...action.payload,
+                        infoLoading: false
+                    }
+                }
             };
     }
 

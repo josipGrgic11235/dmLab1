@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DMLab1.Backend
 {
@@ -46,6 +42,14 @@ namespace DMLab1.Backend
         public string Country { get; set; }
     }
 
+    public class FacebookLocation
+    {
+        public string City { get; set; }
+        public string Country { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+    }
+
     public class FoursquareVenueDetailsResponse
     {
         public object Meta { get; set; }
@@ -60,9 +64,24 @@ namespace DMLab1.Backend
     public class InnerVenueInfo
     {
         public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public ContactInfo Contact { get; set; }
+        public LocationInfo Location { get; set; }
         public Likes Likes { get; set; }
         public AggregationObject<PhotoInfo> Photos { get; set; }
         public AggregationObject<TipInfo> Tips { get; set; }
+    }
+
+    public class ContactInfo
+    {
+        public string FormattedPhone { get; set; }
+    }
+
+    public class LocationInfo
+    {
+        public List<string> FormattedAddress { get; set; }
+        public string Address => FormattedAddress != null ? string.Join(", ", FormattedAddress) : "";
     }
 
     public class Likes
@@ -129,6 +148,10 @@ namespace DMLab1.Backend
     public class VenueInfo
     {
         public string Id { get; set; }
+        public string Name { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
+        public string Description { get; set; }
         public int LikeCount { get; set; }
         public List<string> PhotoUrls { get; set; }
         public List<Tip> Tips { get; set; }

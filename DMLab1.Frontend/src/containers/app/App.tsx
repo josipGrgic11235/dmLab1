@@ -11,7 +11,7 @@ import { IFacebookLoginCheck, IFacebookLoginStatus, IVenueInfo } from '../../typ
 
 export interface IAppProps {
 	loginInfo: IFacebookLoginCheck;
-	venueData: IVenueInfo[];
+	venueData: { [id: string]: IVenueInfo };
 
 	onLogin?(response: IFacebookLoginCheck): void;
 	getVenueData?(venueId: string): void;
@@ -59,18 +59,14 @@ class App extends React.Component<IAppProps, any> {
 					<img src={logo} className="App-logo" alt="logo" />
 					<h1 className="App-title">Welcome to React</h1>
 				</header>
-				<p className="App-intro">
-					To get started, edit <code>src/App.tsx</code> and save to reload.
-        		</p>
 				{!isLoggedIn && <button onClick={this._onLogin}>Login</button>}
 				{isLoggedIn && <button onClick={this._onLogout}>Logout</button>}
 
-				{this.props.venueData.map((item, index) =>
+				{Object.keys(this.props.venueData).map((key, index) =>
 					<VenueInfo
-						data={item}
+						data={this.props.venueData[key]}
 						key={index}
 						onClicked={this.props.getVenueData}
-						isLoadingData={false}
 					/>
 				)}
 			</div>
@@ -102,7 +98,7 @@ class App extends React.Component<IAppProps, any> {
 	private _onLoggedIn(response: any) {
 		console.log(response);
 		if (response.status === 'connected') {
-			window.FB.api('/me?fields=id,name,birthday,location,email', (dataResponse: any) => {
+			window.FB.api('/me?fields=id,name,birthday,location{location},email', (dataResponse: any) => {
 				console.log(dataResponse);
 				this.props.onLogin({
 					status: response.status,
@@ -111,7 +107,7 @@ class App extends React.Component<IAppProps, any> {
 						email: dataResponse.email,
 						name: dataResponse.name,
 						id: dataResponse.id,
-						location: dataResponse.location.name
+						location: dataResponse.location
 					}
 				})
 			});

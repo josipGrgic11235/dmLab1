@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DMLab1.Backend
 {
-    public class ApiCredentials
+    public class ResponseData
     {
-        public string FoursquareClientId { get; set; }
-        public string FoursquareClientSecret { get; set; }
+        public List<RecommendedVenue> Venues { get; set; }
+        public WeatherResponse Weather { get; set; }
     }
 }
