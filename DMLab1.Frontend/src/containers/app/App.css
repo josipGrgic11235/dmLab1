@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: gainsboro;
 }
 
 .App-logo {
@@ -10,8 +12,9 @@
 .App-header {
   background-color: #222;
   height: 150px;
-  padding: 20px;
+  padding: 40px;
   color: white;
+  margin-bottom: 10px;
 }
 
 .App-title {
@@ -20,6 +23,30 @@
 
 .App-intro {
   font-size: large;
+}
+
+.app__weather-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.data {
+  padding: 5px;
+}
+
+.app__venue-list {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.weather-data {
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
 }
 
 @keyframes App-logo-spin {

@@ -8,28 +8,14 @@ namespace DMLab1.Backend
         [HttpPost]
         public ResponseData Login([FromBody] Login logindata)
         {
-            var data = AppManager.GetData(logindata.Location);
-
-            if (data != null)
-            {
-                MongoDatabase.StoreResponseData(data, logindata);
-            }
-
-            return data;
+            return AppManager.GetData(logindata);
         }
 
         [Route("api/app/venue/{venueId}")]
         [HttpGet]
         public VenueInfo GetVenueInformation([FromUri] string venueId)
         {
-            var venueInfo = AppManager.GetVenueInformation(venueId);
-
-            if (venueInfo != null)
-            {
-                MongoDatabase.StoreVenueInfo(venueInfo);
-            }
-
-            return venueInfo;
+            return AppManager.GetVenueInformation(venueId);
         }
     }
 }

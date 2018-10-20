@@ -23,9 +23,9 @@ namespace DMLab1.Backend
             OPEN_WEATHER_MAP_KEY = apiData.OpenWeatherMapKey;
         }
 
-        public static ResponseData GetData(FacebookLocation location)
+        public static ResponseData GetData(Login login)
         {
-            var foursquareRequest = WebRequest.CreateHttp(GetFourSquareRequestUrl("venues/explore", $"near={location.City}"));
+            var foursquareRequest = WebRequest.CreateHttp(GetFourSquareRequestUrl("venues/explore", $"near={login.Location.City}"));
             var foursquareContent = GetRequestResponseContent(foursquareRequest);
 
             if (foursquareContent == null)
@@ -33,7 +33,7 @@ namespace DMLab1.Backend
                 return null;
             }
 
-            var openWeatherMapRequest = WebRequest.CreateHttp(GetOpenWeatherMapRequestUrl(location.Latitude, location.Longitude)); ;
+            var openWeatherMapRequest = WebRequest.CreateHttp(GetOpenWeatherMapRequestUrl(login.Location.Latitude, login.Location.Longitude)); ;
             var openWeatherMapContent = GetRequestResponseContent(openWeatherMapRequest);
 
             try
@@ -49,11 +49,14 @@ namespace DMLab1.Backend
                     Temperature = openWeatherMapData.Main.Temp
                 };
 
-                return new ResponseData
+                var data = new ResponseData
                 {
                      Venues = venues,
                      Weather = weather
                 };
+
+                MongoDatabase.StoreResponseData(data, login);
+                return data;
             }
 
             catch (Exception e)
@@ -65,6 +68,11 @@ namespace DMLab1.Backend
 
         public static VenueInfo GetVenueInformation(string venueId)
         {
+            if (MongoDatabase.TryGetVenueInfo(venueId, out var info))
+            {
+                return info;
+            }
+
             var request = WebRequest.CreateHttp(GetFourSquareRequestUrl($"venues/{venueId}"));
             var content = GetRequestResponseContent(request);
 
@@ -76,7 +84,7 @@ namespace DMLab1.Backend
             try
             {
                 var data = JsonConvert.DeserializeObject<FoursquareVenueDetailsResponse>(content);
-                return new VenueInfo
+                var venueInfo = new VenueInfo
                 {
                     Id = data.Response.Venue.Id,
                     Name = data.Response.Venue.Name,
@@ -87,6 +95,9 @@ namespace DMLab1.Backend
                     PhotoUrls = data.Response.Venue.Photos.Groups.SelectMany(g => g.Items.Select(i => i.Url)).ToList(),
                     Tips = data.Response.Venue.Tips.Groups.SelectMany(g => g.Items.Select(t => new Tip(t))).ToList()
                 };
+
+                MongoDatabase.StoreVenueInfo(venueInfo);
+                return venueInfo;
             }
             catch (Exception e)
             {

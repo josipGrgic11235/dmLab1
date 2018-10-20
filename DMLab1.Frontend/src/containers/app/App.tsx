@@ -7,11 +7,12 @@ import { VenueInfo } from 'src/components/venueInfo/VenueInfo';
 import * as appActions from '../../actions/appActions';
 import logo from '../../logo.svg';
 import { IAppState } from '../../reducers/appReducer';
-import { IFacebookLoginCheck, IFacebookLoginStatus, IVenueInfo } from '../../types';
+import { IFacebookLoginCheck, IFacebookLoginStatus, IVenueInfo, IWeatherInfo } from '../../types';
 
 export interface IAppProps {
 	loginInfo: IFacebookLoginCheck;
 	venueData: { [id: string]: IVenueInfo };
+	weather: IWeatherInfo;
 
 	onLogin?(response: IFacebookLoginCheck): void;
 	getVenueData?(venueId: string): void;
@@ -20,7 +21,8 @@ export interface IAppProps {
 function mapStateToProps(state: IAppState): Partial<IAppProps> {
 	return {
 		loginInfo: state.loginInfo,
-		venueData: state.venueInfo
+		venueData: state.venueInfo,
+		weather: state.weather
 	};
 }
 
@@ -52,23 +54,38 @@ class App extends React.Component<IAppProps, any> {
 	public render() {
 		const isLoggedIn = Boolean(this.props.loginInfo)
 			&& this.props.loginInfo.status === IFacebookLoginStatus.connected;
+		const weather = this.props.weather;
 
 		return (
 			<div className="App">
 				<header className="App-header">
 					<img src={logo} className="App-logo" alt="logo" />
-					<h1 className="App-title">Welcome to React</h1>
-				</header>
-				{!isLoggedIn && <button onClick={this._onLogin}>Login</button>}
-				{isLoggedIn && <button onClick={this._onLogout}>Logout</button>}
+					<h1 className="App-title">Welcome to the Venue Recommender 3000</h1>
 
-				{Object.keys(this.props.venueData).map((key, index) =>
-					<VenueInfo
-						data={this.props.venueData[key]}
-						key={index}
-						onClicked={this.props.getVenueData}
-					/>
-				)}
+					{!isLoggedIn && <button onClick={this._onLogin}>Login</button>}
+					{isLoggedIn && <button onClick={this._onLogout}>Logout</button>}
+				</header>
+
+				{Boolean(weather) && <div className="app__weather-container">
+					<h3>Today's weather</h3>
+					<div className="weather-data">
+						<span className="data">Temperature: <b>{weather.temperature} °C</b></span>
+						<span className="data">Pressure: <b>{weather.pressure} Pa</b></span>
+						<span className="data"><b>{weather.description}</b></span>
+					</div>
+					<hr />
+				</div>}
+				{this.props.venueData && Object.keys(this.props.venueData).length > 0 && <h3>Venues:</h3>}
+				<div className="app__venue-list">
+					{Object.keys(this.props.venueData).map((key, index) =>
+						<VenueInfo
+							data={this.props.venueData[key]}
+							key={index}
+							onClicked={this.props.getVenueData}
+						/>
+					)}
+				</div>
+
 			</div>
 		);
 	}

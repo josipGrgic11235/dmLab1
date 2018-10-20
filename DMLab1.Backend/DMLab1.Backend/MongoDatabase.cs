@@ -20,6 +20,19 @@ namespace DMLab1.Backend
             //_VenueInfoCollection.DeleteMany(FilterDefinition<MongoVenueInfoObject>.Empty);
         }
 
+        internal static bool TryGetVenueInfo(string venueId, out VenueInfo info)
+        {
+            var data = _VenueInfoCollection.Find(venueInfo => venueInfo.Id == venueId).FirstOrDefault();
+            if (data != null)
+            {
+                info = data.VenueInfo;
+                return true;
+            }
+
+            info = null;
+            return false;
+        }
+
         public static void StoreResponseData(ResponseData data, Login login)
         {
             _ResponseDataCollection.InsertOne(new MongoResponseDataObject(data, login, DateTime.UtcNow));
@@ -53,13 +66,14 @@ namespace DMLab1.Backend
     public class MongoVenueInfoObject
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        public string Id { get; set; }
         [BsonElement("VenueInfo")]
         public VenueInfo VenueInfo { get; set; }
 
         public MongoVenueInfoObject(VenueInfo info)
         {
             VenueInfo = info;
+            Id = info.Id;
         }
     }
 
